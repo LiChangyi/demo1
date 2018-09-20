@@ -2,7 +2,7 @@
  * @Author: Pawn 
  * @Date: 2018-09-11 21:08:33 
  * @Last Modified by: Pawn
- * @Last Modified time: 2018-09-13 20:43:16
+ * @Last Modified time: 2018-09-19 20:44:43
  */
 
 const jwt = require('jsonwebtoken');
@@ -42,8 +42,8 @@ module.exports = {
         // 保存用户的_id，便于操作
         ctx._id = res[0]._id;
       }catch (e) {
-        ctx.response.status = 500;
-        ctx.response.body = "服务器异常请稍后再试!";
+        ctx.response.status = 401;
+        ctx.response.body = "登录已过期请重新登录!";
         return;
       }
     }

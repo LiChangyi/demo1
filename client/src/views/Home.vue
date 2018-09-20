@@ -4,6 +4,7 @@
     <CommentBox
     @add_data=add_data></CommentBox>
     <div class="comment-list">
+      <Loading v-show="loading_mark"></Loading>
       <p class="comment-list-title">留言列表:</p>
       <CommentItem
        v-for="(item,index) in comment_data" :key="index"
@@ -14,6 +15,7 @@
       :page_size=this.pagination.size
       :total=this.pagination.total
       @jump=jump
+      v-show="!loading_mark"
       ></Paginator>
     </div>
   </div>
@@ -23,9 +25,10 @@
 import CommentBox from "@/components/CommentBox"
 import CommentItem from '@/components/CommentItem'
 import Paginator from '@/components/Paginator'
+import Loading from '@/components/Loading'
 
 export default {
-  components: {CommentBox,CommentItem,Paginator},
+  components: {CommentBox,CommentItem,Paginator,Loading},
   async created(){
     this.get_data();
   },
@@ -36,17 +39,21 @@ export default {
         size: 10,
         total: 0
       },
-      comment_data: []
+      comment_data: [],
+      loading_mark: true
     }
   },
   methods: {
     async get_data(){
+      this.loading_mark = true;
+      this.comment_data = [];
       let res = await this.$http.api_get_leave(this.pagination);
       let {code, msg, data} = res.data;
       if(code == 200){
         this.comment_data = data.list;
         this.pagination = data.pagination;
       }
+      this.loading_mark = false;
     },
     delete_this(id){
       let index = this.comment_data.findIndex(item => item._id === id);
@@ -75,6 +82,8 @@ export default {
   .comment-list {
     width: 800px;
     margin: auto;
+    position: relative;
+    // overflow: hidden;
   }
   .comment-list-title {
     text-align: left;

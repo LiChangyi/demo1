@@ -9,7 +9,7 @@
         <p class="user-name">{{user_name}}</p>
       </div>
       <div class="text-box">
-        <textarea v-model="content"></textarea>
+        <textarea v-model="content" placeholder="最多150个字符"></textarea>
         <div class="text-box-tool">
           <button @click="publish">发表</button>
         </div>
@@ -47,16 +47,16 @@ export default {
         alert("你还是说点什么吧!");
         return;
       }
+      if(this.content.length >= 150){
+        alert("你说的太多了，最多只能输入150个字符哦。")
+        return;
+      }
       let res = await this.$http.api_add_leave({content: this.content});
-      let {code,msg,data} = res.data;
+      let {code,msg,data={}} = res.data;
       alert(msg);
       if(code == 200){
         this.content = "";
-        data.user_id = {
-          _id: this.$store.state.user._id,
-          avatar: this.$store.state.user.avatar,
-          user_name: this.$store.state.user.user_name
-        };
+        data.user_id = this.$store.state.user._id;
         this.$emit("add_data", data);
       }
     }

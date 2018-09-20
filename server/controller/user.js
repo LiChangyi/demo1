@@ -2,7 +2,7 @@
  * @Author: Pawn 
  * @Date: 2018-09-11 19:49:02 
  * @Last Modified by: Pawn
- * @Last Modified time: 2018-09-17 21:39:55
+ * @Last Modified time: 2018-09-19 19:07:36
  */
 const User = require('../db').User;
 const sha1 = require('sha1');
@@ -141,6 +141,31 @@ module.exports = {
       ctx.body = {
         code: 500,
         msg: '登录失败，服务器异常!'
+      }
+    }
+  },
+  // 通过_id 获取用户信息
+  async query(ctx, next){
+    let _id = ctx.query._id;
+    if(_id.length != 24){
+      ctx.body = {
+        code: 401,
+        msg: '查询失败，_id错误！'
+      }
+      return;
+    }
+    try {
+      let res = await User.findOne({_id},{avatar:true,_id: true,user_name:true});
+      ctx.body = {
+        code: 200,
+        msg: '查询成功！',
+        data: res
+      }
+    }catch(e){
+      console.log(e);
+      ctx.body = {
+        code: 500,
+        msg: '查询失败，服务器异常，请稍后再试!'
       }
     }
   }

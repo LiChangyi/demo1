@@ -2,7 +2,7 @@
  * @Author: Pawn 
  * @Date: 2018-09-13 18:29:26 
  * @Last Modified by: Pawn
- * @Last Modified time: 2018-09-17 18:56:23
+ * @Last Modified time: 2018-09-19 20:41:42
  */
 const Comment = require('../db').Comment
 const xss = require("xss");
@@ -26,10 +26,10 @@ module.exports = {
       skip: Number((page-1)*size),
       limit: Number(size),
       sort:{"create_time":"-1"},
-      populate: {
-        path: 'user_id',
-        select: "_id user_name avatar"
-      }
+      // populate: {
+      //   path: 'user_id',
+      //   select: "_id user_name avatar"
+      // }
     }
     let res = await Comment.find({},null,options);
     let total = await Comment.countDocuments();
@@ -61,6 +61,13 @@ module.exports = {
       ctx.body = {
         code: 401,
         msg: "留言失败，请写点什么吧!"
+      }
+      return;
+    }
+    if(content.length >= 150){
+      ctx.body = {
+        code: 401,
+        msg: "你说的太多了，最多只能输入150个字符哦。"
       }
       return;
     }

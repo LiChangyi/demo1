@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import userInfo from './module/userInfo'
 
 Vue.use(Vuex);
 
@@ -38,6 +39,9 @@ const mutations = {
 }
 
 export default new Vuex.Store({
+  modules: {
+    userInfo
+  },
   state,
   mutations
 });

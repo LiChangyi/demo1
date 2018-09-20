@@ -2,16 +2,16 @@
   <div class="comment-item">
     <div class="user-info">
       <div class="avatar-box">
-        <img :src=item.user_id.avatar alt="头像">
+        <img :src=userInfo.avatar alt="头像">
       </div>
       <div class="other-info">
-        <p class="user-name">{{item.user_id.user_name}}</p>
+        <p class="user-name">{{userInfo.user_name}}</p>
         <p class="create-time">{{format(item.create_time)}}</p>
       </div>
     </div>
     <div class="comment-content" v-text="item.content">
     </div>
-    <div class="del-box" v-show="item.user_id._id == $store.state.user._id">
+    <div class="del-box" v-show="userInfo._id == $store.state.user._id">
       <span class="del-btn" @click="del_comment">删除</span>
     </div>
   </div>
@@ -26,8 +26,17 @@ export default {
       return function(val){
         return format_date(val);
       }
+    },
+    userInfo(){
+      return this.$store.state.userInfo.data.find(item => {
+        return item._id == this.item.user_id;
+    })
     }
   },
+  async created(){
+    this.$store.dispatch("get_userinfo", this.item.user_id);
+  }
+  ,
   methods: {
     async del_comment(){
       if(confirm("确定删除此条留言吗？")){

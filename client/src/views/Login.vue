@@ -76,6 +76,11 @@ export default {
           avatar: data.avatar,
           user_name: data.user_name
         })
+        this.$store.commit('save_userinfo', {
+          _id: data._id,
+          avatar: data.avatar,
+          user_name: data.user_name
+        })
         // 跳转路由到/home
         this.$router.push('/home');
       }
